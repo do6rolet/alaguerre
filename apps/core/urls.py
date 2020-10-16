@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth import views
 from apps.core.views import frontpage, signup
-from apps.inside.views import inside, search_reporters
+from apps.inside.views import inside, search
 from apps.inside.api import *
 from apps.userprofile.views import *
 urlpatterns = [
@@ -14,7 +14,7 @@ urlpatterns = [
 
 
     path('inside/', inside, name='inside'),
-    path('search-reporters/', search_reporters, name='search_reporters'),
+    path('search/', search, name='search'),
     path('edit_profile/', edit_profile, name='edit_profile'),
     path('u/<str:username>/', userprofile, name='userprofile'),
     path('u/<str:username>/follow', follow_reporter, name='follow_reporter'),
