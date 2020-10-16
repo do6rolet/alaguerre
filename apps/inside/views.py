@@ -26,17 +26,20 @@ def inside(request):
 
 
 @login_required
-def search_reporters(request):
+def search(request):
     query = request.GET.get('query', '')
 
     if len(query) > 0:
         reporters = User.objects.filter(username__icontains=query)
+        reports = Report.objects.filter(body__icontains=query)
     else:
         reporters = []
+        reports = []
 
     context = {
         'query': query,
-        'reporters': reporters
+        'reporters': reporters,
+        'reports': reports
     }
 
-    return render(request, 'inside/search_reporters.html', context)
+    return render(request, 'inside/search.html', context)
