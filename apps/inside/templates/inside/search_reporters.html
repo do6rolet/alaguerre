@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+{% load humanize %}
+
+{% block content %}
+    <div class="container">
+        <div class="columns">
+            <div class="column is-6">
+                <h1 class="title">Search</h1>
+                <p>Search term: "{{ query }}" </p>
+                <hr>
+
+                <form action="{% url 'search_reporters' %}" method="get">
+                    <div class="field">
+                        <div class="control">
+                            <input type="text" class="input" name="query" value="{{ query }}">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-success">Search reporters</button>
+                        </div>
+                    </div>
+                </form>
+
+                <hr>
+
+                <div class="search-results">
+                    {% for reporter in reporters %}
+                        {% if reporter.userprofile.avatar %}
+                            <article class="media">
+                                <figure class="media-left">
+                                    <p class="image is-64x64">
+                                        <a href="{% url 'userprofile' reporter.username %}"><img
+                                                src="{{ reporter.userprofile.avatar.url }}" alt="avatar"></a>
+                                    </p>
+                                    <hr>
+                                </figure>
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <a href="{% url 'userprofile' reporter.username %}">{{ reporter.username }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        {% else %}
+                            <p><a href="{% url 'userprofile' reporter.username %}">{{ reporter.username }}</a></p>
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

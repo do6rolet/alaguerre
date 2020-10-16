@@ -1,0 +1,186 @@
+{% extends 'core/base.html' %}
+{% load humanize %}
+
+{% block content %}
+    <div class="container" id="insideapp">
+        <div class="columns">
+            <div class="column is-12">
+                <div class="wrapper-form">
+                    <form v-on:submit.prevent="submitReport()">
+                        <div class="field">
+                            <div class="control">
+                                <textarea class="textarea" v-model="body"
+                                          placeholder="What are your report?"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" type="submit">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="wrapper-reports">
+                    <div class="report" v-for="report in reports">
+                        <article class="media">
+                            <figure class="media-left">
+                                <p class="image is-64x64">
+                                    <img :src="report.avatar">
+
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>[[ report.reporter ]]</strong>
+                                        <small>[[ report.created_at ]]</small>
+                                        <br>
+                                        [[ report.body ]]
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    {% for report in reports %}
+                        <div class="report">
+                            <article class="media">
+                                <figure class="media-left">
+                                    <p class="image is-64x64">
+                                        {% if report.created_by.userprofile.avatar %}
+                                            <a href="{% url 'userprofile' report.created_by.username %}">
+                                                <img src="{{ report.created_by.userprofile.avatar.url }}" alt="avatar">
+                                            </a>
+                                        {% endif %}
+                                    </p>
+                                </figure>
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <strong>
+                                                <a href="{% url 'userprofile' report.created_by.username %}">
+                                                    {{ report.created_by.username }}</a></strong>
+                                            <small>{{ report.created_at|naturaltime }}</small>
+                                            <br>
+                                            {{ report.body }}
+                                            <br>
+                                            <a @click="likeReport({{ report.id }})"
+                                               v-if="!liked_reports.includes({{ report.id }})">Like</a>
+                                            <span v-if="liked_reports.includes({{ report.id }})">Liked</span>
+                                            <small id="likes-{{ report.id }}">{{ report.likes.count }} likes</small>
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        new Vue({
+            el: '#insideapp',
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    reports: [],
+                    body: '',
+                    reporter: '{{ request.user.username }}',
+                    created_at: 'Now',
+                    avatar: '{% if request.user.userprofile.avatar %} {{ request.user.userprofile.avatar.url }}{% endif %}',
+                    liked_reports: [
+                        {% for report in reports %}
+                            {% if report.liked %}
+                                {{ report.id }},
+                            {% endif %}
+                        {% endfor %}],
+                }
+            },
+            methods: {
+                likeReport(report_id) {
+
+                    this.liked_reports.push(parseInt(report_id));
+
+                    var report = {
+                        'report_id': report_id
+                    };
+
+                    // Send to backend
+                    fetch('/api/add_like/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        credentials: 'same-origin', {#: Send user credentials (cookies, basic http auth, etc..) #}
+                        {#if the URL is on the same origin as the calling script#}
+                        body: JSON.stringify(report)
+                    })
+                        .then((response) => {
+                            console.log(response);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+
+                    const el = document.getElementById('likes-' + report_id);
+                    const likes = parseInt(el.innerHTML.split(' ')[0])+1;
+                    el.innerHTML = likes + ' likes';
+                },
+                submitReport() {
+                    console.log('submitReport');
+
+                    if (this.body.length > 0) {
+                        var report = {
+                            'body': this.body,
+                            'reporter': this.reporter,
+                            'created_at': this.created_at,
+                            'avatar': this.avatar,
+
+                        };
+
+                        this.reports.unshift(report)
+
+                        // Send to backend
+                        fetch('/api/add_report/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            credentials: 'same-origin', {#: Send user credentials (cookies, basic http auth, etc..) #}
+                            {#if the URL is on the same origin as the calling script#}
+                            body: JSON.stringify(report)
+                        })
+                            .then((response) => {
+                                console.log(response);
+
+
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    }
+
+                    this.body = '';
+                }
+            }
+        });
+    </script>
+{% endblock %}
