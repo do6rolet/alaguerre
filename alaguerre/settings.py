@@ -33,6 +33,7 @@ LOGIN_URL = 'login'
 # Application definition
 
 INSTALLED_APPS = [
+    'apps.conversation',
     'apps.inside',
     'apps.core',
     'apps.userprofile',
