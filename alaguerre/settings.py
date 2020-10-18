@@ -33,6 +33,7 @@ LOGIN_URL = 'login'
 # Application definition
 
 INSTALLED_APPS = [
+    'apps.notification',
     'apps.conversation',
     'apps.inside',
     'apps.core',
@@ -69,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.notification.context_processors.notifications',
             ],
         },
     },

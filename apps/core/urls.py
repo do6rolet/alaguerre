@@ -4,10 +4,11 @@ from django.urls import path
 from django.contrib.auth import views
 from apps.core.views import frontpage, signup
 from apps.inside.views import inside, search
-from apps.inside.api import *
 from apps.userprofile.views import *
 from apps.conversation.views import *
+from apps.notification.views import notifications
 from apps.conversation.api import api_add_message
+from apps.inside.api import *
 
 urlpatterns = [
   path('', frontpage, name='frontpage'),
@@ -18,6 +19,7 @@ urlpatterns = [
   path('inside/', inside, name='inside'),
   path('search/', search, name='search'),
   path('edit_profile/', edit_profile, name='edit_profile'),
+  path('notifications/', notifications, name='notifications'),
   path('conversations/', conversations, name='conversations'),
   path('conversations/<int:user_id>/', conversation, name='conversation'),
   path('u/<str:username>/', userprofile, name='userprofile'),
