@@ -1,1 +1,1 @@
-web: gunicorn alaguerre.wsgi --log-file-
+web: gunicorn alaguerre.wsgi --log-file -

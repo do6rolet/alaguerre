@@ -10,3 +10,4 @@ db.sqlite3# Editor directories and files
 __pycache__/
 *.py[cod]
 *$py.class
+.idea/workspace.xml

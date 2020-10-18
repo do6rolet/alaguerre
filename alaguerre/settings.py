@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '_%4dv7vhm5t&k2s-dr0*$vj_fv8yyf9i_@kmbld4gii8aa31ca'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['alaguerre.herokuapp.com', '127.0.0.1:8000']
 
 LOGOUT_REDIRECT_URL = 'frontpage'
 LOGIN_REDIRECT_URL = 'inside'
@@ -94,11 +94,15 @@ WSGI_APPLICATION = 'alaguerre.wsgi.application'
 
 
 DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'ciba',
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dajebhsh2jt1bo',
+        'HOST': 'ec2-54-75-229-28.eu-west-1.compute.amazonaws.com',
+        'PORT': 5432,
+        'USER': 'memzwruvlxppfk',
+        'PASSWORD': 'd0989e96691b07563e44b9d743d914e8e360e131a411de1ded112005ec5118bc'
     }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -140,7 +144,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
-
+STATIC_ROOT = [
+    BASE_DIR / 'staticfiles'
+]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
