@@ -11,9 +11,23 @@
                         <div class="conversations-list-item">
                             {% for user in conversation.users.all %}
                                 {% if user != request.user %}
-                                    <a href="{% url 'conversation' user.id %}">
-                                    <p>{{ user.username }} - {{ conversation.modified_at|naturaltime }}</p>
-                                    </a>
+                                    <article class="media">
+                                        <figure class="media-left">
+                                            <p class="image is-64x64">
+                                                {% if user.userprofile.avatar %}
+                                                    <img src="{{ user.userprofile.avatar.url }}"/>
+                                                {% endif %}
+                                            </p>
+                                        </figure>
+                                        <div class="media-content">
+                                            <div class="content">
+                                                <a href="{% url 'conversation' user.id %}">
+                                                    <p>{{ user.username }}
+                                                        - {{ conversation.modified_at|naturaltime }}</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </article>
                                 {% endif %}
                             {% endfor %}
                         </div>
