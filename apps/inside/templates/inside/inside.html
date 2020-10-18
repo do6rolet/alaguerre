@@ -4,12 +4,12 @@
 {% block content %}
     <div class="container" id="insideapp">
         <div class="columns">
-            <div class="column is-12">
+            <div class="column is-6">
                 <div class="wrapper-form">
                     <form v-on:submit.prevent="submitReport()">
                         <div class="field">
                             <div class="control">
-                                <textarea class="textarea" v-model="body"
+                                <textarea class="textarea is-info" v-model="body"
                                           placeholder="What are your report?"></textarea>
                             </div>
                         </div>
